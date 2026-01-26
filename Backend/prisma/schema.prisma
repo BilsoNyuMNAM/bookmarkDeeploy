@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  runtime = "cloudflare"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Category{
+  id Int @id @default(autoincrement())
+  CategoryName String  @default("no category")
+  //store the id form the link field 
+  links Link[] //this means a category can be linked to many links in the Link category
+}
+model Link{
+  id Int @id @default(autoincrement())
+  url String
+  Name String
+  Description String? //it means this filed is optional
+  category Category @relation(fields: [CategoryId], references: [id])
+  CategoryId Int
+  createdAt DateTime @default(now())
+
+}
+

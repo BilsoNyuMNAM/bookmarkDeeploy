@@ -1,0 +1,27 @@
+{
+	"name": "square-forest-972c",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.12.4",
+		"@types/node": "^25.0.10",
+		"prisma": "^7.3.0",
+		"typescript": "^5.9.3",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.60.0"
+	},
+	"dependencies": {
+		"@prisma/client": "^7.3.0",
+		"@prisma/extension-accelerate": "^3.0.1",
+		"dotenv": "^17.2.3",
+		"hano": "^0.0.0",
+		"hono": "^4.11.6"
+	}
+}
