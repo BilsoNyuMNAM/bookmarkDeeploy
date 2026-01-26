@@ -6,19 +6,6 @@ import Total from "./Total";
 import CategoryFilterCard from "./CategoryFilter";
 
 
-type response = {
-    id: number,
-    createdAt: Date,
-    url: String,
-    Name: String,
-    Description: String,
-    CategoryId: number,
-
-    category: {
-        CategoryName: String
-    }
-}
-
 export default function Group({ refresh, setrefresh }: { refresh: number, setrefresh: React.Dispatch<React.SetStateAction<number>> }) {
     const { filter, filterBookmark, bookMarkfilter, filterByid } = useBookmarkFilter(refresh)
 

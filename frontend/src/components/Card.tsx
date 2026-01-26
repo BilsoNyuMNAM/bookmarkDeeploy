@@ -11,7 +11,7 @@ type response = {
     CategoryName: string
 }
 
-function Logic({ id, url, Name, Description, CategoryId, CategoryName, createdAt, setrefresh }: response & { setrefresh: any }) {
+function Logic({ id, url, Name, CategoryName, createdAt, setrefresh }: Omit<response, 'Description' | 'CategoryId'> & { setrefresh: any }) {
 
 
     const handleDelete = async () => {
