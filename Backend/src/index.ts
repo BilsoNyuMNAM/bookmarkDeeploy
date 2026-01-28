@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 // import router from "./link/create.js";
-import noterouter from "./notes/create.ts";
+import noterouter from "./notes/create";
 const app = new Hono();
 
 

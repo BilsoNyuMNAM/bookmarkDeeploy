@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-export default function Notesfield({ setOpen }) {
+export default function Notesfield({ setOpen}) {
 
     const [isMaximized, setIsMaximized] = useState(false)
     const [isDisabled, setDisabled] = useState(false)
@@ -19,17 +19,30 @@ export default function Notesfield({ setOpen }) {
             [name]: value
         }))
     }
-    function Submit() { //this is the function that will submit information to the backend []i have not defined the route path 
-        // fetch("https://5488a260-square-forest-972c.yumnambilson.workers.dev/api/v1/notes/create")
-        setDisabled(true)
-        console.log("Submit button is trigerred")
-        setTimeout(() => {
+    async function Submit() {
+    setDisabled(true)
+    console.log("Submit button is triggered")
+    try {
+        const response = await fetch("http://localhost:8787/api/v1/notes/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: notes.title,
+                category: notes.category,
+                content: notes.content
+            })
+        })
+        const data = await response.json()
+        console.log("Response from backend:", data)
+        console.log(data)
+        } catch (error) {
+            console.error("Error creating note:", error)
+        } finally {
             setDisabled(false)
-
-        }, 2000)
-
-
-    }
+        }
+}
     return (
         <div className={`fixed bg-white z-2 ${isMaximized
             ? 'inset-0' 
