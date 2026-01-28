@@ -1,17 +1,18 @@
 import { useState } from "react"
+import {useVisibility} from "../hooks/useVisibility"
 import Wrapper from "./Wrapper"
 
-function Button({ refresh, setrefresh }: { refresh: number, setrefresh: React.Dispatch<React.SetStateAction<number>> }) {
-    const [isOpen, setOpen] = useState(false)
+function Button({ refresh, setrefresh}: { refresh: number, setrefresh: React.Dispatch<React.SetStateAction<number>> }) {
+    const {isOpen, setOpen} = useVisibility();
     return (
         <>
-            <div className="w-100%  flex items-center justify-center">
-                <div>
-                    <button id="button" className="border-4 border-black px-6 py-3 font-bold text-sm tracking-wide hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2" onClick={() => {
-                        setOpen(true)
-                    }}>+ ADD BOOKMARK</button>
-                </div>
+           
+            <div>
+                <button id="button" className="px-5 py-4 border-3 border-black" onClick={() => {
+                    setOpen(true)
+                }}>+ ADD BOOKMARK</button>
             </div>
+           
 
 
             {

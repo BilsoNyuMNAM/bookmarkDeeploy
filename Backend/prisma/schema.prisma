@@ -32,3 +32,18 @@ model Link{
 
 }
 
+model Note{
+  id Int @id @default(autoincrement())
+  title String
+  content String ?
+  notecategory Notecategory @relation(fields: [notecategoryId], references: [id])
+  notecategoryId Int
+
+}
+
+model Notecategory{
+  id Int @id @default(autoincrement())
+  category String @default("general")
+  notes Note[]
+
+}

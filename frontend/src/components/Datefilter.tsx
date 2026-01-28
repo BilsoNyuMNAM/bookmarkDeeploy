@@ -1,6 +1,8 @@
+type DatefilterProps = {
+  bookMarkfilter?: Function
+}
 
-
-export default function Datefilter({bookMarkfilter}:{bookMarkfilter:Function}){
+export default function Datefilter({bookMarkfilter}:DatefilterProps){
     
     return(
         <div className="mt-3 border-4 border-black p-4" >

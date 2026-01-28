@@ -1,7 +1,11 @@
 
 import Card from "./Card"
 //@ts-ignore
-export default function Display({ bookMark, setrefresh }) {
+type ReceivedProps = {
+    bookMark?: Array<Object>
+    setrefresh?: React.Dispatch<React.SetStateAction<number>>
+}
+export default function Display({ bookMark, setrefresh }:ReceivedProps) {
     console.log("data received inside Display component:", bookMark)
 
     return (
