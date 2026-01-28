@@ -8,14 +8,7 @@ import Notesfield from './components/Notesfield'
 import { useVisibility } from './hooks/useVisibility'
 import Addnotebutton from './components/Addnotebutton'
 import Notesgroup from './components/Notesgroup'
-
-interface NoteCardData {
-  id?: number
-  title: string
-  category: string
-  content: string
-  createdAt?: string
-}
+import type { NoteCardData } from './types/notes'
 
 function App() {
   const [refresh, setrefresh] = useState(0);
@@ -41,7 +34,7 @@ function App() {
       </div>
     </div>
       {
-        isOpen? <Notesfield setOpen={setOpen} onNoteCreated={(note) => setNotes(prev => [{ ...note, createdAt: note.createdAt ?? new Date().toISOString() }, ...prev])} /> : null
+        isOpen? <Notesfield setOpen={setOpen} onNoteCreated={(note) => setNotes(prev => [note, ...prev])} /> : null
       }
       <header className="border-black p-6 ">
           <div className="w-100%  flex items-center justify-center">

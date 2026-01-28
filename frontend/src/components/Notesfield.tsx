@@ -1,13 +1,6 @@
 
 import { useState, type ChangeEvent } from "react"
-
-interface NoteCardData {
-    id?: number
-    title: string
-    category: string
-    content: string
-    createdAt?: string
-}
+import type { NoteCardData } from "../types/notes"
 
 interface NotesfieldProps {
     setOpen: (open: boolean) => void
@@ -51,7 +44,7 @@ export default function Notesfield({ setOpen, onNoteCreated }: NotesfieldProps) 
         const data = await response.json() as { result?: { id: number; title: string; content: string | null } }
         console.log("Response from backend:", data)
         console.log(data)
-        if (response.ok) {
+        if (response.ok && data.result) {
             onNoteCreated?.({
                 id: data.result?.id,
                 title: data.result?.title ?? notes.title,

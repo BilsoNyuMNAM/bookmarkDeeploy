@@ -1,13 +1,6 @@
 import Datefilter from "./Datefilter";
 import Notescard from "./Notesacard";
-
-interface NoteCardData {
-    id?: number
-    title: string
-    category: string
-    content: string
-    createdAt?: string
-}
+import type { NoteCardData } from "../types/notes";
 
 interface NotesgroupProps {
     notes: NoteCardData[]
@@ -21,9 +14,9 @@ export default function Notesgroup({ notes }: NotesgroupProps){
                 {notes.length === 0 ? (
                     <Notescard />
                 ) : (
-                    notes.map((note) => (
+                    notes.map((note, index) => (
                         <Notescard
-                            key={note.id ?? `${note.title}-${note.createdAt ?? "note"}`}
+                            key={note.id ?? `${note.title}-${note.createdAt ?? "note"}-${index}`}
                             title={note.title}
                             category={note.category}
                             content={note.content}
