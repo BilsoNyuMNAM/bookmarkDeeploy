@@ -1,6 +1,20 @@
 
-import { useState } from "react"
-export default function Notesfield({ setOpen}) {
+import { useState, type ChangeEvent } from "react"
+
+interface NoteCardData {
+    id?: number
+    title: string
+    category: string
+    content: string
+    createdAt?: string
+}
+
+interface NotesfieldProps {
+    setOpen: (open: boolean) => void
+    onNoteCreated?: (note: NoteCardData) => void
+}
+
+export default function Notesfield({ setOpen, onNoteCreated }: NotesfieldProps) {
 
     const [isMaximized, setIsMaximized] = useState(false)
     const [isDisabled, setDisabled] = useState(false)
@@ -11,7 +25,7 @@ export default function Notesfield({ setOpen}) {
         content: ""
     })
 
-    function handleChange(e: any) {
+    function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = e.target
         console.log(e.target)
         setNotes(notes => ({
@@ -34,9 +48,18 @@ export default function Notesfield({ setOpen}) {
                 content: notes.content
             })
         })
-        const data = await response.json()
+        const data = await response.json() as { result?: { id: number; title: string; content: string | null } }
         console.log("Response from backend:", data)
         console.log(data)
+        if (response.ok) {
+            onNoteCreated?.({
+                id: data.result?.id,
+                title: data.result?.title ?? notes.title,
+                category: notes.category,
+                content: data.result?.content ?? notes.content,
+                createdAt: new Date().toISOString()
+            })
+        }
         } catch (error) {
             console.error("Error creating note:", error)
         } finally {
@@ -76,6 +99,7 @@ export default function Notesfield({ setOpen}) {
                     <div>
                         <input 
                             type="text" 
+                            name="title"
                             placeholder="Untitled" 
                             value={notes.title}
                             className="text-4xl md:text-5xl font-bold mb-8 border-none outline-none placeholder:text-gray-300 w-full" 
@@ -90,6 +114,7 @@ export default function Notesfield({ setOpen}) {
                                 <input 
                                     className="border-black px-3 py-2 text-sm font-mono border-2" 
                                     type="text" 
+                                    name="category"
                                     placeholder="Add category..." 
                                     value={notes.category}
                                     onChange={handleChange}
@@ -99,6 +124,7 @@ export default function Notesfield({ setOpen}) {
                         <div>
                             <textarea 
                                 placeholder="write your notes here..." 
+                                name="content"
                                 className="w-full h-full outline-none min-h-[400px]" 
                                 value={notes.content}
                                 onChange={handleChange}

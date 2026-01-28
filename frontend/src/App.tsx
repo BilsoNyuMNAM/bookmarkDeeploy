@@ -1,7 +1,6 @@
 
 
 import Button from './components/Button'
-import Datefilter from './components/Datefilter'
 import Group from './components/Group'
 import { useState } from 'react'
 import './App.css'
@@ -10,10 +9,26 @@ import { useVisibility } from './hooks/useVisibility'
 import Addnotebutton from './components/Addnotebutton'
 import Notesgroup from './components/Notesgroup'
 
+interface NoteCardData {
+  id?: number
+  title: string
+  category: string
+  content: string
+  createdAt?: string
+}
+
 function App() {
   const [refresh, setrefresh] = useState(0);
   const {isOpen, setOpen} = useVisibility();
   const [isNotesOpen, setisNotesOpen] = useState(false)
+  const [notes, setNotes] = useState<NoteCardData[]>([
+    {
+      title: "Notes Title",
+      category: "Category",
+      content: "Notes content/description",
+      createdAt: "2026-10-20T00:00:00.000Z"
+    }
+  ])
   const bookmarkactiveButtonStyle = isNotesOpen?null:"bg-black text-white"
    const notesactiveButtonStyle = isNotesOpen?"bg-black text-white":null
   return (
@@ -26,7 +41,7 @@ function App() {
       </div>
     </div>
       {
-        isOpen? <Notesfield setOpen={setOpen} /> : null
+        isOpen? <Notesfield setOpen={setOpen} onNoteCreated={(note) => setNotes(prev => [{ ...note, createdAt: note.createdAt ?? new Date().toISOString() }, ...prev])} /> : null
       }
       <header className="border-black p-6 ">
           <div className="w-100%  flex items-center justify-center">
@@ -40,7 +55,7 @@ function App() {
       <main className='p-6 font-sans '>
         <div>
           {
-            isNotesOpen?<Notesgroup/>: <Group refresh={refresh} setrefresh={setrefresh} />
+            isNotesOpen?<Notesgroup notes={notes}/>: <Group refresh={refresh} setrefresh={setrefresh} />
             
           }
           
