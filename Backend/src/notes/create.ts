@@ -70,6 +70,7 @@ noterouter.get("/getall", async (c)=>{
                     id:true,
                     title:true,
                     content:true,
+                    notecategoryId:true,
                 }
             }   
         }
