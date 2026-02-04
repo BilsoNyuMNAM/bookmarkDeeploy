@@ -3,7 +3,7 @@
 interface NotescardProps {
     title?: string
     category?: string
-    content?: string
+    content?: string | null
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     createdAt?: string
     id: number
@@ -14,6 +14,8 @@ interface NotescardProps {
 
 
 export default function Notescard({ deleteNoteById, setid, setOpen,setpassNote, id, title = "Note title", category = "Category", content = "Notes content/description", createdAt }: NotescardProps, ) {
+    const previewText = toPlainText(content)
+    const preview = previewText.length > 140 ? `${previewText.slice(0, 140)}...` : previewText
 
     const formattedDate = createdAt
         ? new Date(createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.')
@@ -43,7 +45,7 @@ export default function Notescard({ deleteNoteById, setid, setOpen,setpassNote, 
                         
                     </div>
                     <div className="mb-4 text-sm leading-relaxed line-clamp-6 whitespace-pre-line">
-                        <p>{content.split("", 100)}</p>
+                        <p>{preview}</p>
                     </div>
                     <div className="pt-3 border-t-2 border-gray-200">
                         <p className="text-[10px] tracking-widest text-gray-500 font-bold">{formattedDate}</p>
@@ -55,4 +57,17 @@ export default function Notescard({ deleteNoteById, setid, setOpen,setpassNote, 
         </div>
 
     )
+}
+
+function toPlainText(value?: string | null) {
+    if (!value) return ""
+
+    // Basic HTML -> text for previews (notes.content is rich-text HTML).
+    return value
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
 }
