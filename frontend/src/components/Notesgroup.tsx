@@ -7,7 +7,7 @@ interface Note {
     id: number
     title: string
     category: string
-    content: string
+    content: string | null
     createdAt: string
     notecategoryId: number
 }
@@ -16,25 +16,25 @@ interface NotesGroupProps {
     notes: Note[],
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     setpassNote: React.Dispatch<React.SetStateAction<boolean>>
-    setid: React.Dispatch<React.SetStateAction<number>>
+    setid: React.Dispatch<React.SetStateAction<number | null>>
     fetchNotes: () => void
 
 }
 
 export default function Notesgroup({ setid, notes, setOpen, setpassNote, fetchNotes }: NotesGroupProps) {
-    console.log("id of notes being passed to Notesgroup:", notes.map(note => note.id));
+    console.log("id of notes being passed to Notesgroup:", notes.map((note: Note) => note.id));
 
     const [optimisticNotes, setOptimisticNotes] = useOptimistic(notes, notesReducer);  //[{}, {}, {}]
-    //@ts-ignore
-    function notesReducer(optimisticNotes, action) {
+
+    function notesReducer(optimisticNotes: Note[], action: { type: string; id: number }) {
         if (action.type === "DELETE") {
-            return optimisticNotes.filter((note) => { return note.id != action.id })
+            return optimisticNotes.filter((note: Note) => { return note.id != action.id })
         }
         return optimisticNotes;
     }
 
 
-    async function deleteNoteById({ id }: { id: number }) { //convert the id from string to number and pass it here 
+    async function deleteNoteById(id: number) { //convert the id from string to number and pass it here 
         //this function will receive a note id and who will pass it ?? the button with the onClick handler 
         startTransition(() => {
             setOptimisticNotes({ type: "DELETE", id });

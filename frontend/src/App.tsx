@@ -8,6 +8,15 @@ import { useVisibility } from './hooks/useVisibility'
 import Addnotebutton from './components/Addnotebutton'
 import Notesgroup from './components/Notesgroup'
 
+interface Note {
+  id: number
+  title: string
+  category: string
+  content: string | null
+  createdAt: string
+  notecategoryId: number
+}
+
 function App() {
   const [refresh, setrefresh] = useState(0);
   const { isOpen, setOpen } = useVisibility();
@@ -16,11 +25,11 @@ function App() {
   const bookmarkactiveButtonStyle = isNotesOpen ? null : "bg-black text-white"
   const notesactiveButtonStyle = isNotesOpen ? "bg-black text-white" : null
 
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState<Note[]>([])
 
   const [passNote, setpassNote] = useState(false)
 
-  const [id, setid] = useState(null)
+  const [id, setid] = useState<number | null>(null)
 
   async function fetchNotes() {
     try {

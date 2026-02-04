@@ -133,20 +133,21 @@ export default function Notesfield({
         reader.readAsDataURL(file)
     }
 
-    function addLink() {
-        if (!editor) return
-        const previousUrl = editor.getAttributes('link').href
-        const url = window.prompt('Enter URL:', previousUrl || 'https://')
+    // Commented out - not currently used in UI but kept for future link functionality
+    // function addLink() {
+    //     if (!editor) return
+    //     const previousUrl = editor.getAttributes('link').href
+    //     const url = window.prompt('Enter URL:', previousUrl || 'https://')
 
-        if (url === null) return // Cancelled
+    //     if (url === null) return // Cancelled
 
-        if (url === '') {
-            editor.chain().focus().extendMarkRange('link').unsetLink().run()
-            return
-        }
+    //     if (url === '') {
+    //         editor.chain().focus().extendMarkRange('link').unsetLink().run()
+    //         return
+    //     }
 
-        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-    }
+    //     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+    // }
 
     async function submit() {
         setDisabled(true)
