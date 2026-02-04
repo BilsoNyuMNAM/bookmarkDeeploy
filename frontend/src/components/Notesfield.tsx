@@ -151,7 +151,7 @@ export default function Notesfield({
     async function submit() {
         setDisabled(true)
         try {
-            await fetch("http://localhost:8787/api/v1/notes/create", {
+            await fetch("https://square-forest-972c.yumnambilson.workers.dev/api/v1/notes/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -175,7 +175,7 @@ export default function Notesfield({
         setDisabled(true)
 
         try {
-            await fetch(`http://localhost:8787/api/v1/notes/update/${id}`, {
+            await fetch(`https://square-forest-972c.yumnambilson.workers.dev/api/v1/notes/update/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

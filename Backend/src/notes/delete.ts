@@ -2,7 +2,11 @@ import { PrismaClient } from "../../generated/prisma/client.js"
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 
-const deleteRouter = new Hono();
+type Bindings = {
+    DATABASE_URL: string
+}
+
+const deleteRouter = new Hono<{ Bindings: Bindings }>();
 
 const getPrismaClient = (databaseUrl: string) => {
     return new PrismaClient({
@@ -22,7 +26,7 @@ deleteRouter.delete("/:id", async (c) => {
     }
 
     try {
-        
+
         const existingNote = await prisma.note.findUnique({
             where: { id: id }
         })
@@ -33,7 +37,7 @@ deleteRouter.delete("/:id", async (c) => {
             }, 404)
         }
 
-        
+
         const deletedNote = await prisma.note.delete({
             where: { id: id }
         })

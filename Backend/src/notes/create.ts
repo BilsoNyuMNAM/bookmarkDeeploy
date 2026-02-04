@@ -1,8 +1,12 @@
 import { PrismaClient } from "../../generated/prisma/client.js"
 import { withAccelerate } from "@prisma/extension-accelerate";
-import {Hono} from "hono";
+import { Hono } from "hono";
 
-const noterouter = new Hono();
+type Bindings = {
+    DATABASE_URL: string
+}
+
+const noterouter = new Hono<{ Bindings: Bindings }>();
 
 const getPrismaClient = (databaseUrl: string) => {
     return new PrismaClient({
@@ -11,43 +15,43 @@ const getPrismaClient = (databaseUrl: string) => {
 }
 
 type saveData = {
-    id:number,
-    title:string,
-    notecategoryId:number,
-    content:string | null
+    id: number,
+    title: string,
+    notecategoryId: number,
+    content: string | null
 }
 
-noterouter.post("/create", async (c)=>{ //api/v1/notes
+noterouter.post("/create", async (c) => { //api/v1/notes
     const prisma = getPrismaClient(c.env.DATABASE_URL)
     const body = await c.req.json();
-    const {title, category, content} = body; //title = body.title, category = body.category, content = body.content
+    const { title, category, content } = body; //title = body.title, category = body.category, content = body.content
     const categoryId = await prisma.notecategory.findFirst({
-        where:{
-            category:category
+        where: {
+            category: category
         }
     })
-    if(!categoryId){
+    if (!categoryId) {
         const createCategory = await prisma.notecategory.create({
-            data:{
+            data: {
                 category: category
             }
         })
-        const createNote:saveData = await prisma.note.create({
-            data:{
+        const createNote: saveData = await prisma.note.create({
+            data: {
                 title: title,
                 notecategoryId: createCategory.id,
                 content: content
             }
-        
+
         })
         return c.json({
-            message:"Note created successfully",
-            result:createNote
+            message: "Note created successfully",
+            result: createNote
         }, 201)
     }
     //else
     const createNote = await prisma.note.create({
-        data:{
+        data: {
             title: title,
             notecategoryId: categoryId.id,
             content: content
@@ -55,29 +59,29 @@ noterouter.post("/create", async (c)=>{ //api/v1/notes
     })
 
     return c.json({
-        message:"Note created successfully",
-        result:createNote
+        message: "Note created successfully",
+        result: createNote
     }, 201)
 })
 
-noterouter.get("/getall", async (c)=>{
+noterouter.get("/getall", async (c) => {
     const prisma = getPrismaClient(c.env.DATABASE_URL)
     const getNotes = await prisma.notecategory.findMany({
-        select:{
-            category:true,
-            notes:{
-                select:{
-                    id:true,
-                    title:true,
-                    content:true,
-                    notecategoryId:true,
+        select: {
+            category: true,
+            notes: {
+                select: {
+                    id: true,
+                    title: true,
+                    content: true,
+                    notecategoryId: true,
                 }
-            }   
+            }
         }
     })
     return c.json({
-        message:"Notes fetched successfully",
-        result:getNotes
+        message: "Notes fetched successfully",
+        result: getNotes
     }, 200)
 })
 

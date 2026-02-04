@@ -18,13 +18,13 @@ function App() {
 
   const [notes, setNotes] = useState([])
 
-const [passNote, setpassNote] = useState(false)
+  const [passNote, setpassNote] = useState(false)
 
-const [id, setid] = useState(null)
+  const [id, setid] = useState(null)
 
   async function fetchNotes() {
     try {
-      const response = await fetch("http://localhost:8787/api/v1/notes/getall")
+      const response = await fetch("https://square-forest-972c.yumnambilson.workers.dev/api/v1/notes/getall")
       const data = await response.json()
       console.log("Fetched notes:", data)
 
@@ -37,7 +37,7 @@ const [id, setid] = useState(null)
         }))
       ) || []
 
-    setNotes(flattenedNotes)
+      setNotes(flattenedNotes)
 
     } catch (error) {
       console.error("Error fetching notes:", error)
@@ -46,7 +46,7 @@ const [id, setid] = useState(null)
 
 
   useEffect(() => {
-    if (isNotesOpen ) {
+    if (isNotesOpen) {
       fetchNotes()
     }
   }, [isNotesOpen])
@@ -62,7 +62,7 @@ const [id, setid] = useState(null)
       </div>
       {
         //conditional rendering the notes when the user select one of the notes card
-        isOpen ? <Notesfield setOpen={setOpen} onNoteCreated={fetchNotes} {...(passNote ? { noteTodisplay: notes.find(note => note.id === id) } : {})}  /> : null
+        isOpen ? <Notesfield setOpen={setOpen} onNoteCreated={fetchNotes} {...(passNote ? { noteTodisplay: notes.find(note => note.id === id) } : {})} /> : null
       }
       <header className="border-black p-6 ">
         <div className="w-100%  flex items-center justify-center">
@@ -76,10 +76,10 @@ const [id, setid] = useState(null)
       <main className='p-6 font-sans '>
         <div>
           {
-            isNotesOpen ? <Notesgroup fetchNotes={fetchNotes} notes={notes} setOpen={setOpen} setpassNote={setpassNote} setid={setid}/> : <Group refresh={refresh} setrefresh={setrefresh} />
+            isNotesOpen ? <Notesgroup fetchNotes={fetchNotes} notes={notes} setOpen={setOpen} setpassNote={setpassNote} setid={setid} /> : <Group refresh={refresh} setrefresh={setrefresh} />
           }
         </div>
-          
+
       </main>
 
       <footer >

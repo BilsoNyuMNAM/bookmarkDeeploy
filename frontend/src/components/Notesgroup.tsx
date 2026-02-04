@@ -41,7 +41,7 @@ export default function Notesgroup({ setid, notes, setOpen, setpassNote, fetchNo
         });
 
         try {
-            const response = await fetch((`http://localhost:8787/api/v1/notes/delete/${id}`), {
+            const response = await fetch((`https://square-forest-972c.yumnambilson.workers.dev/api/v1/notes/delete/${id}`), {
                 method: "DELETE",
             });
             if (response.status === 404) {
@@ -60,7 +60,7 @@ export default function Notesgroup({ setid, notes, setOpen, setpassNote, fetchNo
 
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
 
-    
+
     const filteredNotes = selectedCategoryId === 0
         ? optimisticNotes
         : optimisticNotes.filter(note => note.notecategoryId === selectedCategoryId);
