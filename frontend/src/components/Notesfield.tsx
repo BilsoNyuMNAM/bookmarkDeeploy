@@ -367,18 +367,6 @@ export default function Notesfield({
                                 {'</>'})
                             </button>
 
-                            {/* Link */}
-                            <button
-                                type="button"
-                                disabled={!editor || isDisabled}
-                                onClick={addLink}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("link")
-                                    ? "bg-black text-white"
-                                    : "bg-white hover:bg-black hover:text-white"
-                                    }`}
-                            >
-                                🔗
-                            </button>
 
                             {/* Image */}
                             <button
