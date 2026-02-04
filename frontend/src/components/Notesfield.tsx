@@ -205,8 +205,7 @@ export default function Notesfield({
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setOpen(false)}
-                            className="hover:bg-gray-200 border-2 border-black p-2 w-8 h-8"
-                        >
+                            className="hover:bg-gray-200 border-2 border-black p-2 w-8 h-8">
                             <img src="./close.svg" />
                         </button>
                         <span className="font-bold text-sm">{editMode ? "EDIT NOTE" : "NEW NOTE"}</span>
