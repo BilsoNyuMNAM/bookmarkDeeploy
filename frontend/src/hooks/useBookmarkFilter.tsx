@@ -43,15 +43,21 @@ export function useBookmarkFilter(refresh: number = 0) {
 
 
     function bookMarkfilter(e: any) {
-        const date = e.target.id
+        // Safety check: ensure target exists
+        if (!e || !e.target) return;
+
+        const date = e.target.id;
+
+        // If clicked on container (no ID) or invalid ID, ignore
+        if (!date || (date !== "all" && !(date in datefilter) && date !== "older")) {
+            return;
+        }
 
         if (date == "all") {
-            // Change: Set filter AND set filterBookmark to show all, then return
             setFilter("all")
             setfilterBookmark(bookMark)
             return
         }
-
 
         setFilter(date)
 
@@ -60,8 +66,12 @@ export function useBookmarkFilter(refresh: number = 0) {
             const createdTime = new Date(bookmark.createdAt).getTime()
             const divisor = (1000 * 60 * 60 * 24);
             const daysDifference = (todayTime - createdTime) / divisor
-            //@ts-ignore
-            return daysDifference <= datefilter[date] //need to change
+
+            if (date === "older") {
+                return daysDifference > 30;
+            }
+            const key = date as keyof typeof datefilter;
+            return daysDifference <= datefilter[key]
         })
         console.log("filtered:", filtered)
         setfilterBookmark(filtered)

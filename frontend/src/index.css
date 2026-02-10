@@ -1,10 +1,16 @@
 @import "tailwindcss";
 
+body {
+  background-color: #FEFBE8;
+  /* amber-50ish cream color */
+}
+
 /* Tiptap placeholder */
 .note-editor .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
+  /* gray-400 */
   pointer-events: none;
   height: 0;
 }

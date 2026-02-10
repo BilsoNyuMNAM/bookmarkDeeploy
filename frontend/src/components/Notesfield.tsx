@@ -198,6 +198,7 @@ export default function Notesfield({
 
     return (
         <div
+            //@learned: How to display the note at the center of the screen using fixed and inset csss properties 
             className={`fixed bg-white z-2 ${isMaximized ? "inset-0" : "inset-4 md:inset-8 lg:inset-16"
                 }`}
         >
