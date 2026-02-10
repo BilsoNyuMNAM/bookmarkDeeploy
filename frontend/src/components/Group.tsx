@@ -7,7 +7,7 @@ import CategoryDropdown from "./CategoryFilter";
 
 
 export default function Group({ refresh, setrefresh }: { refresh: number, setrefresh: React.Dispatch<React.SetStateAction<number>> }) {
-    const { filter, filterBookmark, bookMarkfilter, filterByid, bookMark } = useBookmarkFilter(refresh)
+    const { filterBookmark, bookMarkfilter, filterByid, bookMark } = useBookmarkFilter(refresh)
 
     // Derive detailed categories from the full list (bookMark) not the filtered list
     //@ts-ignore

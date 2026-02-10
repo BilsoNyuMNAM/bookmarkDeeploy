@@ -58,6 +58,7 @@ export default function Notesfield({
         return `<p>${escapeHtml(trimmed).replace(/\n/g, "<br />")}</p>`
     }, [noteTodisplay?.id])
 
+    // @ts-ignore
     const editor = useEditor(
         {
             extensions: [
@@ -275,7 +276,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().setParagraph().run()}
+                                onClick={() => editor?.chain().focus().setParagraph().run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("paragraph")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -288,7 +289,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                                onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 1 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -299,7 +300,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 2 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -310,7 +311,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                                onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 3 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -326,7 +327,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleBold().run()}
+                                onClick={() => editor?.chain().focus().toggleBold().run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("bold")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -337,7 +338,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleItalic().run()}
+                                onClick={() => editor?.chain().focus().toggleItalic().run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold italic ${editor?.isActive("italic")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -348,7 +349,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleUnderline().run()}
+                                onClick={() => (editor?.chain().focus() as any).toggleUnderline().run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-bold underline ${editor?.isActive("underline")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -364,7 +365,7 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                                onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
                                 className={`border-2 border-black px-2 py-1 text-xs font-mono ${editor?.isActive("codeBlock")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
@@ -421,6 +422,14 @@ export default function Notesfield({
                         >
                             <EditorContent editor={editor} />
                         </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={onPickImage}
+                            className="hidden"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                        />
                     </div>
                 </div>
             </div>
