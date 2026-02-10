@@ -11,6 +11,10 @@ Currently, two official plugins are available:
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
+## Deploying to Vercel
+
+The repository includes a root `vercel.json` configured to build the app from the `frontend` directory and serve the Vite `dist` output.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
