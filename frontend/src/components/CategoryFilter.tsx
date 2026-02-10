@@ -39,7 +39,7 @@ export default function CategoryDropdown({ categories, filterByid, onReset }: Pr
     };
 
     return (
-        <div className="relative inline-block text-left z-20" ref={dropdownRef}>
+        <div className="relative inline-block text-left z-1" ref={dropdownRef}>
             <div>
                 <button
                     onClick={() => setIsOpen(!isOpen)}

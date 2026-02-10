@@ -55,55 +55,80 @@ function Bookmark({ setrefresh, setOpen }: BookmarkProps) {
     }
     return (
 
-        <div >
-            <div className="bg-white text-black">
-                <div className=" border-b-4 border-black p-6 flex flex-row justify-between ">
+        <div className="w-full flex justify-center">
+            <div className="bg-[#FFD600] text-black w-full max-w-md border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <div className="p-6 flex flex-row justify-between items-start">
                     <div>
-                        <h2 className="font-bold text-2xl md:text-3xl tracking-tight leading-tight">ADD NEW BOOKMARK</h2>
-                        <p className="text-xs tracking-widest mt-2 text-gray-500">FILL IN THE DETAILS BELOW</p>
-
+                        <h2 className="font-black text-5xl uppercase tracking-tighter leading-none">ADD BOOKMARK</h2>
                     </div>
-                    <button className="w-8 h-8 m-2 cursor-pointer" onClick={() => setOpen(false)}>
-                        <img src="./close.svg"></img>
+                    <button className="w-10 h-10 border-2 border-black bg-[#FFD600] hover:bg-white flex items-center justify-center transition-colors" onClick={() => setOpen(false)}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="square" strokeLinejoin="miter">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
-                <div>
-                    <div className="p-6 flex flex-col gap-2 ">
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">URL:</label>
-                            <input name="url" onChange={set} value={linkInfo.url} placeholder="https://example.com" className="text-black w-full border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">NAME:</label>
-                            <input name="Name" onChange={set} value={linkInfo.Name} placeholder="BOOKMARK TITLE" className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">CATEGORY:</label>
-                            <input name="categoryName" onChange={set} value={linkInfo.categoryName} placeholder="DESIGN" className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4">
-                            <label className="text-xs font-bold mb-2">DESCRIPTION:</label>
-                            <input name="Description" onChange={set} value={linkInfo.Description} placeholder="Enter a brief description..." className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
 
+                <div className="px-6 pb-6 flex flex-col gap-4">
+                    <div>
+                        <label className="text-sm font-black mb-1 block uppercase">URL:</label>
+                        <input
+                            name="url"
+                            onChange={set}
+                            value={linkInfo.url}
+                            placeholder="https://example.com"
+                            className="w-full border-2 border-black p-2 text-sm font-bold focus:outline-none focus:ring-0 placeholder:text-gray-500 bg-white"
+                        />
                     </div>
-                    <div className="border-t-4 p-6 flex justify-center">
-                        {
-                            disable ? <button
-                                type="button" key="saving"
-                                className="cursor-not-allowed text-white bg-oklch(44.4% 0.011 73.639)  focus:ring-4 focus:ring-oklch(44.4% 0.011 73.639) font-medium rounded text-sm px-6 py-2.5 focus:outline-none mt-2">
-                                Saving.....
-                            </button> :
+                    <div>
+                        <label className="text-sm font-black mb-1 block uppercase">NAME:</label>
+                        <input
+                            name="Name"
+                            onChange={set}
+                            value={linkInfo.Name}
+                            placeholder="BOOKMARK TITLE"
+                            className="w-full border-2 border-black p-2 text-sm font-bold focus:outline-none focus:ring-0 placeholder:text-gray-500 bg-white"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm font-black mb-1 block uppercase">CATEGORY:</label>
+                        <input
+                            name="categoryName"
+                            onChange={set}
+                            value={linkInfo.categoryName}
+                            placeholder="DESIGN"
+                            className="w-full border-2 border-black p-2 text-sm font-bold focus:outline-none focus:ring-0 placeholder:text-gray-500 bg-white"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm font-black mb-1 block uppercase">DESCRIPTION:</label>
+                        <input
+                            name="Description"
+                            onChange={set}
+                            value={linkInfo.Description}
+                            placeholder="Enter a brief description..."
+                            className="w-full border-2 border-black p-2 text-sm font-bold focus:outline-none focus:ring-0 placeholder:text-gray-500 bg-white"
+                        />
+                    </div>
 
-                                <button
-                                    type="button" key="save" onClick={() => {
-                                        submit()
-
-                                    }}
-                                    className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500 font-medium rounded text-sm px-6 py-2.5 focus:outline-none mt-2">
-                                    Saved Bookmark
-                                </button>
-                        }
+                    <div className="pt-2">
+                        {disable ? (
+                            <button
+                                type="button"
+                                disabled
+                                className="w-full cursor-not-allowed text-black bg-gray-400 border-2 border-black font-black uppercase text-lg py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] opacity-50"
+                            >
+                                SAVING...
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={submit}
+                                className="w-full text-black bg-[#FF5CAD] hover:bg-[#ff40a0] border-2 border-black font-black uppercase text-xl py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            >
+                                SAVED BOOKMARK
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

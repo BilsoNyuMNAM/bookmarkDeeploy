@@ -1,8 +1,8 @@
-
-import CategoryFilter from "./Filter";
+import CategoryDropdown from "./CategoryFilter";
 import Notescard from "./Notesacard";
 import { startTransition, useState } from 'react'
 import { useOptimistic } from "react";
+
 interface Note {
     id: number
     title: string
@@ -71,15 +71,27 @@ export default function Notesgroup({ setid, notes, setOpen, setpassNote, fetchNo
 
     }
 
+    // Extract unique categories for the dropdown
+    const uniqueCategories = Array.from(
+        new Map(notes.map(note => [note.notecategoryId, { CategoryId: note.notecategoryId, CategoryName: note.category }])).values()
+    );
 
 
     return (
         <div>
-            <CategoryFilter filteredNotes={optimisticNotes} Notesfilter={Notesfilter} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+            <div className="mb-6">
+                <CategoryDropdown
+                    categories={uniqueCategories}
+                    filterByid={Notesfilter}
+                    onReset={() => Notesfilter(0)}
+                />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
                 {filteredNotes.length > 0 ? (
                     filteredNotes.map((note) => (
                         <Notescard
+                            key={note.id}
                             deleteNoteById={deleteNoteById}
                             setid={setid}
                             id={note.id}
@@ -92,7 +104,7 @@ export default function Notesgroup({ setid, notes, setOpen, setpassNote, fetchNo
                         />
                     ))
                 ) : (
-                    <p className="text-gray-500">No notes yet. Create your first note!</p>
+                    <p className="text-gray-500 text-lg font-bold">No notes found for this category.</p>
                 )}
             </div>
 

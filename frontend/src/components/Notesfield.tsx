@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react"
-import { EditorContent, useEditor } from "@tiptap/react"
+import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Image from "@tiptap/extension-image"
 import Placeholder from "@tiptap/extension-placeholder"
@@ -199,7 +199,7 @@ export default function Notesfield({
     return (
         <div
             //@learned: How to display the note at the center of the screen using fixed and inset csss properties 
-            className={`fixed bg-white z-2 ${isMaximized ? "inset-0" : "inset-4 md:inset-8 lg:inset-16"
+            className={`fixed bg-white z-20 ${isMaximized ? "inset-0" : "inset-4 md:inset-8 lg:inset-16 "
                 }`}
         >
             <div className="border-2 border-black flex flex-col h-full">
@@ -266,13 +266,17 @@ export default function Notesfield({
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-2 items-center mb-3">
+                        <BubbleMenu
+                            editor={editor}
+                            tippyOptions={{ duration: 100 }}
+                            className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-wrap gap-1 p-2 max-w-[90vw] overflow-x-auto z-50"
+                        >
                             {/* Paragraph */}
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().setParagraph().run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("paragraph")
+                                onClick={() => editor.chain().focus().setParagraph().run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("paragraph")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -284,8 +288,8 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("heading", { level: 1 })
+                                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 1 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -295,8 +299,8 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("heading", { level: 2 })
+                                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 2 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -306,8 +310,8 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("heading", { level: 3 })
+                                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("heading", { level: 3 })
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -316,14 +320,14 @@ export default function Notesfield({
                             </button>
 
                             {/* Separator */}
-                            <span className="text-gray-300">|</span>
+                            <span className="text-gray-300 self-center">|</span>
 
                             {/* Text Formatting */}
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleBold().run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold ${editor?.isActive("bold")
+                                onClick={() => editor.chain().focus().toggleBold().run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold ${editor?.isActive("bold")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -333,8 +337,8 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleItalic().run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold italic ${editor?.isActive("italic")
+                                onClick={() => editor.chain().focus().toggleItalic().run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold italic ${editor?.isActive("italic")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -344,8 +348,8 @@ export default function Notesfield({
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleUnderline().run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-bold underline ${editor?.isActive("underline")
+                                onClick={() => editor.chain().focus().toggleUnderline().run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-bold underline ${editor?.isActive("underline")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -354,14 +358,14 @@ export default function Notesfield({
                             </button>
 
                             {/* Separator */}
-                            <span className="text-gray-300">|</span>
+                            <span className="text-gray-300 self-center">|</span>
 
                             {/* Code Block */}
                             <button
                                 type="button"
                                 disabled={!editor || isDisabled}
-                                onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
-                                className={`border-2 border-black px-3 py-2 text-xs font-mono ${editor?.isActive("codeBlock")
+                                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                                className={`border-2 border-black px-2 py-1 text-xs font-mono ${editor?.isActive("codeBlock")
                                     ? "bg-black text-white"
                                     : "bg-white hover:bg-black hover:text-white"
                                     }`}
@@ -375,21 +379,14 @@ export default function Notesfield({
                                 type="button"
                                 disabled={!editor || isDisabled}
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-black px-3 py-2 text-xs font-bold bg-white hover:bg-black hover:text-white"
+                                className="border-2 border-black px-2 py-1 text-xs font-bold bg-white hover:bg-black hover:text-white"
                             >
                                 📷 IMG
                             </button>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={onPickImage}
-                            />
-                        </div>
+                        </BubbleMenu>
 
                         <div
-                            className="note-editor border-2 border-black p-4 bg-white min-h-[400px]
+                            className="note-editor  p-4 bg-white min-h-[400px]
                             [&_.ProseMirror]:min-h-[400px]
                             [&_.ProseMirror]:outline-none
                             [&_.ProseMirror]:whitespace-pre-wrap

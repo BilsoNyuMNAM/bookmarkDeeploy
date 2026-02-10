@@ -22,8 +22,7 @@ function App() {
   const { isOpen, setOpen } = useVisibility();
   const [isNotesOpen, setisNotesOpen] = useState(false)
 
-  const bookmarkactiveButtonStyle = isNotesOpen ? null : "bg-black text-white"
-  const notesactiveButtonStyle = isNotesOpen ? "bg-black text-white" : null
+
 
   const [notes, setNotes] = useState<Note[]>([])
 
@@ -64,9 +63,19 @@ function App() {
     <>
 
       <div className='p-6'>
-        <div className="flex gap-2 mb-6 border-4 border-black p-0 inline-flex ">
-          <button className={`px-3 py-5 text-sm font-bold text-black  ${bookmarkactiveButtonStyle}`} onClick={() => setisNotesOpen(false)}>BOOKMARK</button>
-          <button className={`px-3 py-5 text-sm font-bold text-black ${notesactiveButtonStyle}`} onClick={() => setisNotesOpen(true)}>NOTES</button>
+        <div className="flex mb-6 border-4 border-black p-0 inline-flex shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <button
+            className={`px-6 py-3 text-sm font-black transition-colors ${!isNotesOpen ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+            onClick={() => setisNotesOpen(false)}
+          >
+            BOOKMARK
+          </button>
+          <button
+            className={`px-6 py-3 text-sm font-black transition-colors border-l-4 border-black ${isNotesOpen ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+            onClick={() => setisNotesOpen(true)}
+          >
+            NOTES
+          </button>
         </div>
       </div>
       {
