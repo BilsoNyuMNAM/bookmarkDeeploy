@@ -1,114 +1,173 @@
 import React, { useState } from "react";
 
 type BookmarkProps = {
-    setrefresh: React.Dispatch<React.SetStateAction<number>>
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 function Bookmark({ setrefresh, setOpen }: BookmarkProps) {
-
-    const [disable, setenable] = useState(false)
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [linkInfo, setLinkInfo] = useState({
         url: "",
         Name: "",
         Description: "",
-        categoryName: ""
+        categoryName: "",
+    });
 
-    })
-    function submit() {
-        setenable(true)
-        console.log("Submit button is being called")
-        fetch("https://square-forest-972c.yumnambilson.workers.dev/link/save", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                categoryName: linkInfo.categoryName,
-                url: linkInfo.url,
-                Name: linkInfo.Name,
-                Description: linkInfo.Description
-            })
-        })
-            .then(result => {
-                if (result.status == 201) {
-                    console.log("Setting disable to false NOW")
-                    setenable(false)
-                    setrefresh(prev => prev + 1)
-                }
-                result.json()
-                    .then(apiresponse => {
-                        console.log(apiresponse)
-                    })
-            })
-    }
-    //@ts-ignore
-    function set(e) {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setLinkInfo((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
-        const { name, value } = e.target //{"name" , "value"}
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
 
-        // console.log(e.target)
-        setLinkInfo(linkInfo => ({
-            ...linkInfo,
-            [name]: value
-        }))
-    }
+        if (!linkInfo.url.trim()) {
+            setError("URL is required");
+            return;
+        }
+
+        setSaving(true);
+        try {
+            const response = await fetch("https://square-forest-972c.yumnambilson.workers.dev/link/save", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    url: linkInfo.url.trim(),
+                    Name: linkInfo.Name.trim() || linkInfo.url.trim(),
+                    Description: linkInfo.Description.trim(),
+                    categoryName: linkInfo.categoryName.trim() || "no category",
+                }),
+            });
+
+            if (response.status === 201 || response.ok) {
+                setrefresh((prev) => prev + 1);
+                setOpen(false);
+            } else {
+                const data = await response.json().catch(() => ({}));
+                setError(data.error || "Failed to save bookmark");
+                setSaving(false);
+            }
+        } catch (err) {
+            console.error("Save error:", err);
+            setError("Network error while saving");
+            setSaving(false);
+        }
+    };
+
     return (
+        <div className="w-full max-w-lg mx-auto border border-hairline-strong bg-canvas shadow-2xl p-6 text-ink">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-hairline pb-4 mb-5">
+                <div>
+                    <h2 className="text-base font-bold tracking-tight">
+                        [+] NEW BOOKMARK
+                    </h2>
+                    <p className="text-xs text-mute mt-0.5">
+                        ENTER POST DETAILS AND CATEGORY
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="text-xs text-mute hover:text-ink px-2 py-1 border border-hairline hover:border-hairline-strong rounded-[4px] cursor-pointer"
+                >
+                    [ESC]
+                </button>
+            </div>
 
-        <div >
-            <div className="bg-white text-black">
-                <div className=" border-b-4 border-black p-6 flex flex-row justify-between ">
-                    <div>
-                        <h2 className="font-bold text-2xl md:text-3xl tracking-tight leading-tight">ADD NEW BOOKMARK</h2>
-                        <p className="text-xs tracking-widest mt-2 text-gray-500">FILL IN THE DETAILS BELOW</p>
+            {error && (
+                <div className="mb-4 p-2.5 text-xs text-red-500 bg-red-500/10 border border-red-500/30 rounded-[4px]">
+                    [ERROR] {error}
+                </div>
+            )}
 
-                    </div>
-                    <button className="w-8 h-8 m-2 cursor-pointer" onClick={() => setOpen(false)}>
-                        <img src="./close.svg"></img>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-xs font-medium text-mute uppercase mb-1.5">
+                        URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="url"
+                        name="url"
+                        required
+                        autoFocus
+                        value={linkInfo.url}
+                        onChange={handleChange}
+                        placeholder="https://example.com/post"
+                        className="w-full bg-surface-soft text-ink text-xs px-3 py-2.5 border border-hairline rounded-[4px] focus:outline-none focus:border-hairline-strong focus:bg-canvas transition-colors placeholder:text-stone"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-xs font-medium text-mute uppercase mb-1.5">
+                        Title / Name
+                    </label>
+                    <input
+                        type="text"
+                        name="Name"
+                        value={linkInfo.Name}
+                        onChange={handleChange}
+                        placeholder="Post title or note..."
+                        className="w-full bg-surface-soft text-ink text-xs px-3 py-2.5 border border-hairline rounded-[4px] focus:outline-none focus:border-hairline-strong focus:bg-canvas transition-colors placeholder:text-stone"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-xs font-medium text-mute uppercase mb-1.5">
+                        Category
+                    </label>
+                    <input
+                        type="text"
+                        name="categoryName"
+                        value={linkInfo.categoryName}
+                        onChange={handleChange}
+                        placeholder="e.g. Frontend, Design, AI, Coffee"
+                        className="w-full bg-surface-soft text-ink text-xs px-3 py-2.5 border border-hairline rounded-[4px] focus:outline-none focus:border-hairline-strong focus:bg-canvas transition-colors placeholder:text-stone"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-xs font-medium text-mute uppercase mb-1.5">
+                        Description (Optional)
+                    </label>
+                    <textarea
+                        name="Description"
+                        rows={2}
+                        value={linkInfo.Description}
+                        onChange={handleChange}
+                        placeholder="Brief summary or thoughts..."
+                        className="w-full bg-surface-soft text-ink text-xs px-3 py-2.5 border border-hairline rounded-[4px] focus:outline-none focus:border-hairline-strong focus:bg-canvas transition-colors resize-none placeholder:text-stone"
+                    />
+                </div>
+
+                {/* Actions */}
+                <div className="pt-3 border-t border-hairline flex items-center justify-end gap-2.5">
+                    <button
+                        type="button"
+                        onClick={() => setOpen(false)}
+                        className="px-4 py-2 text-xs font-medium text-mute hover:text-ink border border-hairline hover:border-hairline-strong rounded-[4px] transition-colors cursor-pointer"
+                    >
+                        CANCEL
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={saving}
+                        className="px-5 py-2 text-xs font-medium bg-surface-elevated text-ink border border-hairline-strong rounded-[4px] hover:bg-canvas transition-colors cursor-pointer disabled:opacity-50"
+                    >
+                        {saving ? "[ SAVING... ]" : "[ SAVE BOOKMARK ]"}
                     </button>
                 </div>
-                <div>
-                    <div className="p-6 flex flex-col gap-2 ">
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">URL:</label>
-                            <input name="url" onChange={set} value={linkInfo.url} placeholder="https://example.com" className="text-black w-full border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">NAME:</label>
-                            <input name="Name" onChange={set} value={linkInfo.Name} placeholder="BOOKMARK TITLE" className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4 ">
-                            <label className="text-xs font-bold mb-2">CATEGORY:</label>
-                            <input name="categoryName" onChange={set} value={linkInfo.categoryName} placeholder="DESIGN" className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-                        <div className="border-2 border-black p-4">
-                            <label className="text-xs font-bold mb-2">DESCRIPTION:</label>
-                            <input name="Description" onChange={set} value={linkInfo.Description} placeholder="Enter a brief description..." className="w-full  border-2 border-black text-sm font-bold px-4 py-3 "></input>
-                        </div>
-
-                    </div>
-                    <div className="border-t-4 p-6 flex justify-center">
-                        {
-                            disable ? <button
-                                type="button" key="saving"
-                                className="cursor-not-allowed text-white bg-oklch(44.4% 0.011 73.639)  focus:ring-4 focus:ring-oklch(44.4% 0.011 73.639) font-medium rounded text-sm px-6 py-2.5 focus:outline-none mt-2">
-                                Saving.....
-                            </button> :
-
-                                <button
-                                    type="button" key="save" onClick={() => {
-                                        submit()
-
-                                    }}
-                                    className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500 font-medium rounded text-sm px-6 py-2.5 focus:outline-none mt-2">
-                                    Saved Bookmark
-                                </button>
-                        }
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-
     );
 }
 

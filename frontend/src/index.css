@@ -1,1 +1,90 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    
+    /* Light Theme (Cream Canvas & Ink) */
+    --bg-canvas: #fdfcfc;
+    --bg-surface-soft: #f8f7f7;
+    --bg-surface-card: #f1eeee;
+    --bg-surface-elevated: #eae6e6;
+    
+    --color-ink: #201d1d;
+    --color-ink-deep: #0f0000;
+    --color-charcoal: #302c2c;
+    --color-body: #424245;
+    --color-mute: #646262;
+    --color-stone: #6e6e73;
+    --color-ash: #9a9898;
+    
+    --border-hairline: rgba(15, 0, 0, 0.12);
+    --border-hairline-strong: #646262;
+
+    --color-accent: #007aff;
+    --color-danger: #ff3b30;
+    --color-success: #30d158;
+    --color-warning: #ff9f0a;
+  }
+
+  .dark {
+    /* Dark Theme (TUI Mockup / Terminal Surface) */
+    --bg-canvas: #141212;
+    --bg-surface-soft: #1d1a1a;
+    --bg-surface-card: #252222;
+    --bg-surface-elevated: #302c2c;
+    
+    --color-ink: #fdfcfc;
+    --color-ink-deep: #ffffff;
+    --color-charcoal: #dedede;
+    --color-body: #c4c0c0;
+    --color-mute: #9a9898;
+    --color-stone: #8c8888;
+    --color-ash: #6e6a6a;
+    
+    --border-hairline: rgba(253, 252, 252, 0.12);
+    --border-hairline-strong: #757171;
+
+    --color-accent: #2997ff;
+    --color-danger: #ff453a;
+    --color-success: #32d74b;
+    --color-warning: #ffd60a;
+  }
+
+  * {
+    font-family: var(--font-mono) !important;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--color-ink);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+}
+
+/* TUI Utility Classes */
+.bg-canvas { background-color: var(--bg-canvas); }
+.bg-surface-soft { background-color: var(--bg-surface-soft); }
+.bg-surface-card { background-color: var(--bg-surface-card); }
+.bg-surface-elevated { background-color: var(--bg-surface-elevated); }
+
+.text-ink { color: var(--color-ink); }
+.text-body-text { color: var(--color-body); }
+.text-mute { color: var(--color-mute); }
+.text-stone { color: var(--color-stone); }
+.text-ash { color: var(--color-ash); }
+
+.border-hairline { border-color: var(--border-hairline); }
+.border-hairline-strong { border-color: var(--border-hairline-strong); }
+
+/* Monospace selection style */
+::selection {
+  background-color: var(--color-ink);
+  color: var(--bg-canvas);
+}

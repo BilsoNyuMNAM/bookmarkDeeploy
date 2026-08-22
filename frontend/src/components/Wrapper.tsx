@@ -1,22 +1,34 @@
+import { useEffect } from "react";
 import Bookmark from "./Bookmark";
 
-import React from "react";
-
 type WrapperProps = {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    refresh: number
-    setrefresh: React.Dispatch<React.SetStateAction<number>>
-}
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    refresh: number;
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+};
 
 export default function Wrapper({ setOpen, setrefresh }: WrapperProps) {
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setOpen(false);
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [setOpen]);
+
     return (
-        <div id="wrapper" className="inset-0 z-0 fixed h-screen w-screen bg-black" >
-            <div className="h-screen w-screen bg-black fixed z-1" onClick={() => setOpen(false)}>
-            </div>
-            <div className="w-full max-w-md fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div
+                className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+                onClick={() => setOpen(false)}
+            />
+            {/* Modal Content */}
+            <div className="relative z-10 w-full max-w-lg">
                 <Bookmark setrefresh={setrefresh} setOpen={setOpen} />
             </div>
-
         </div>
-    )
+    );
 }

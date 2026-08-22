@@ -1,32 +1,30 @@
-import { useState } from "react"
-import Wrapper from "./Wrapper"
+import { useState } from "react";
+import Wrapper from "./Wrapper";
 
-function Button({ refresh, setrefresh }: { refresh: number, setrefresh: React.Dispatch<React.SetStateAction<number>> }) {
-    const [isOpen, setOpen] = useState(false)
+type ButtonProps = {
+    refresh: number;
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+};
+
+function Button({ refresh, setrefresh }: ButtonProps) {
+    const [isOpen, setOpen] = useState(false);
+
     return (
         <>
-            <div className="w-100%  flex items-center justify-center">
-                <div>
-                    <button id="button" className="border-4 border-black px-6 py-3 font-bold text-sm tracking-wide hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2" onClick={() => {
-                        setOpen(true)
-                    }}>+ ADD BOOKMARK</button>
-                </div>
-            </div>
+            <button
+                id="add-bookmark-button"
+                className="px-3.5 py-1.5 bg-surface-elevated text-ink border border-hairline-strong rounded-[4px] font-medium text-xs tracking-wide hover:bg-canvas hover:border-ink transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                onClick={() => setOpen(true)}
+            >
+                <span className="font-bold text-mute">[+]</span>
+                <span>ADD BOOKMARK</span>
+            </button>
 
-
-            {
-                isOpen ?
-                    <>
-
-                        <Wrapper setOpen={setOpen} refresh={refresh} setrefresh={setrefresh} />
-                    </>
-                    : null
-            }
+            {isOpen && (
+                <Wrapper setOpen={setOpen} refresh={refresh} setrefresh={setrefresh} />
+            )}
         </>
-    )
+    );
 }
 
-
-export default Button
-
-
+export default Button;

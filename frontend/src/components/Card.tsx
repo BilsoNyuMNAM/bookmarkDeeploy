@@ -1,76 +1,154 @@
+import React, { useState } from "react";
 
-// import { useRecoilState } from "recoil" 
-// import { fetchingOrnot } from "../hooks/refresh"
-type response = {
-    id: number,
-    createdAt: Date,
-    url: string,
-    Name: string,
-    Description: string,
-    CategoryId: number
-    CategoryName: string
-}
+type BookmarkItem = {
+    id: number;
+    createdAt: Date;
+    url: string;
+    Name: string;
+    Description?: string;
+    CategoryId: number;
+    category?: {
+        CategoryName: string;
+    };
+};
 
-function Logic({ id, url, Name, CategoryName, createdAt, setrefresh }: Omit<response, 'Description' | 'CategoryId'> & { setrefresh: any }) {
+type CardProps = {
+    bookMark: BookmarkItem[];
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+};
 
+function SingleCard({
+    id,
+    url,
+    Name,
+    CategoryName,
+    Description,
+    createdAt,
+    setrefresh,
+}: {
+    id: number;
+    url: string;
+    Name: string;
+    CategoryName: string;
+    Description?: string;
+    createdAt: Date;
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+}) {
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleDelete = async () => {
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!window.confirm(`Delete bookmark "${Name}"?`)) return;
+
+        setIsDeleting(true);
         try {
             const response = await fetch(`https://square-forest-972c.yumnambilson.workers.dev/link/delete/${id}`, {
-                method: 'DELETE',
+                method: "DELETE",
             });
-            if (response.status == 204) {
-                // Toggle refresh to trigger refetch in Group.tsx
-                setrefresh((prev: number) => prev + 1);
+            if (response.ok) {
+                setrefresh((prev) => prev + 1);
             } else {
-                console.error('Failed to delete bookmark');
+                console.error("Failed to delete bookmark");
+                setIsDeleting(false);
             }
         } catch (error) {
-            console.error('Error deleting bookmark:', error);
+            console.error("Error deleting bookmark:", error);
+            setIsDeleting(false);
         }
     };
 
-    return (
-        //[]todo : wrap this in an anchor tag so that when i click on the card it gets redirected 
-        <div className="border-4 border-black  hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1" >
-            <button onClick={handleDelete} data-delete-id={id} className="cursor-pointer top-3  left-3 z-1  m-2 w-8 h-8 flex items-center justify-center p-0" >
-                <img src="./delete.svg" className="h-6 w-6"></img>
-            </button>
+    // Format display date
+    const dateFormatted = new Date(createdAt).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    }).replace(/\//g, ".");
 
-            <div className="border-t-4 border-black p-4 mt-10">
-                <a href={url}>
-                    <div>
-                        <div className="mb-2 font-bold  text-[10px] ">
-                            <span className="px-2 py-1 border-2  text-[10px] font-bold tracking-widest">{CategoryName}</span>
-                        </div>
-                        <h3 className="  font-bold mb-2 tracking-tight leading-tight line-clamp-2">{Name}</h3>
-                        <div className=" border-t-2 border-gray-200 ">
-                            <span className="text-[10px] tracking-widest text-gray-500 font-bold  ">Added:{new Date(createdAt).toLocaleDateString('en-US')}</span>
-                        </div>
-                    </div>
-                </a>
+    // Extract domain from URL
+    let domain = url;
+    try {
+        domain = new URL(url).hostname.replace("www.", "");
+    } catch {
+        // fallback to url if invalid URL format
+    }
+
+    return (
+        <div className="group relative flex flex-col justify-between border border-hairline bg-surface-soft p-5 transition-all duration-150 hover:border-hairline-strong">
+            {/* Top Bar: Category & Delete */}
+            <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[11px] font-medium text-mute tracking-wider uppercase">
+                    [{CategoryName || "NO CATEGORY"}]
+                </span>
+                
+                <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    title="Delete bookmark"
+                    className="px-2 py-0.5 text-xs text-mute hover:text-red-500 hover:bg-surface-elevated rounded-[4px] transition-colors cursor-pointer disabled:opacity-50"
+                >
+                    {isDeleting ? "..." : "[x]"}
+                </button>
             </div>
 
+            {/* Main Content: Title & Link */}
+            <div className="flex-1 mb-4">
+                <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group-hover:underline underline-offset-4"
+                >
+                    <h3 className="text-[15px] font-bold text-ink leading-snug tracking-tight line-clamp-2 mb-1.5">
+                        {Name || "Untitled Bookmark"} <span className="inline-block text-mute font-normal text-xs">↗</span>
+                    </h3>
+                </a>
+
+                {Description && (
+                    <p className="text-xs text-body-text line-clamp-2 leading-relaxed mt-1">
+                        {Description}
+                    </p>
+                )}
+            </div>
+
+            {/* Bottom Meta Bar */}
+            <div className="pt-3 border-t border-hairline flex items-center justify-between text-[11px] text-stone">
+                <span className="truncate max-w-[140px] text-mute font-mono" title={domain}>
+                    {domain}
+                </span>
+                <span className="font-mono">
+                    {dateFormatted}
+                </span>
+            </div>
         </div>
-    )
+    );
 }
-//@ts-ignore
-export default function Card({ bookMark, setrefresh }) {
+
+export default function Card({ bookMark, setrefresh }: CardProps) {
+    if (!bookMark || bookMark.length === 0) {
+        return (
+            <div className="col-span-full py-16 text-center border border-hairline bg-surface-soft p-8">
+                <p className="text-sm font-mono text-mute mb-2">[!] NO BOOKMARKS FOUND</p>
+                <p className="text-xs text-stone">Add a bookmark or adjust your date/category filter.</p>
+            </div>
+        );
+    }
 
     return (
         <>
-            {bookMark.length == 0 ? (
-                <div>No bookmark to display</div>
-            ) : (
-                //@ts-ignore
-                bookMark.map((bookmark) => (
-
-                    //@ts-ignore
-                    <Logic setrefresh={setrefresh} id={bookmark.id} url={bookmark.url} CategoryName={bookmark.category.CategoryName.toUpperCase()} createdAt={bookmark.createdAt} Name={bookmark.Name} Description={bookmark.Description} CategoryId={bookmark.CategoryId} />
-
-                ))
-            )}
+            {bookMark.map((bookmark) => (
+                <SingleCard
+                    key={bookmark.id}
+                    id={bookmark.id}
+                    url={bookmark.url}
+                    CategoryName={bookmark.category?.CategoryName || "NO CATEGORY"}
+                    createdAt={bookmark.createdAt}
+                    Name={bookmark.Name}
+                    Description={bookmark.Description}
+                    setrefresh={setrefresh}
+                />
+            ))}
         </>
-    )
-
+    );
 }

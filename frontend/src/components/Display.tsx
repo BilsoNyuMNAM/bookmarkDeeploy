@@ -1,18 +1,14 @@
+import Card from "./Card";
 
-import Card from "./Card"
-//@ts-ignore
-export default function Display({ bookMark, setrefresh }) {
-    console.log("data received inside Display component:", bookMark)
+type DisplayProps = {
+    bookMark: any[];
+    setrefresh: React.Dispatch<React.SetStateAction<number>>;
+};
 
+export default function Display({ bookMark, setrefresh }: DisplayProps) {
     return (
-
-        <div className=" grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-1 gap-3 mt-10">
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             <Card bookMark={bookMark} setrefresh={setrefresh} />
-
         </div>
-
-
-    )
+    );
 }
-

@@ -16,11 +16,9 @@ const getPrismaClient = (databaseUrl: string) => {
 }
 
 router.post("/save", async (c) => {
-    console.log("request reached inside the save endpoint")
     const prisma = getPrismaClient(c.env.DATABASE_URL)
 
     const body = await c.req.json()
-    console.log(body)
 
     // If the category name is empty, set it to "no category"
     if (!body.categoryName || body.categoryName === "") {
@@ -34,8 +32,7 @@ router.post("/save", async (c) => {
         where: {
             CategoryName: categoryName
         }
-    })
-
+    })    
     if (existCategory) {
         // Category exists, save the link with this category
         const saveLink = await prisma.link.create({
@@ -46,7 +43,6 @@ router.post("/save", async (c) => {
                 CategoryId: existCategory.id
             }
         })
-        console.log(saveLink)
         return c.json({
             message: "link saved successfully",
             save: saveLink
@@ -68,14 +64,12 @@ router.post("/save", async (c) => {
                     CategoryId: saveCategory.id
                 }
             })
-
-            console.log(saveLink)
             return c.json({
                 message: "link and category saved successfully",
                 save: saveLink
             }, 201)
         } catch (error) {
-            console.error(error)
+            
             return c.json({
                 error: "error saving the link or category",
                 errorLogic: error
@@ -83,6 +77,9 @@ router.post("/save", async (c) => {
         }
     }
 })
+
+
+
 
 router.get("/showall", async (c) => {
     const prisma = getPrismaClient(c.env.DATABASE_URL)
@@ -93,7 +90,6 @@ router.get("/showall", async (c) => {
             url: true,
             Name: true,
             createdAt: true,
-            Description: true,
             CategoryId: true,
             category: {
                 select: {
@@ -138,4 +134,47 @@ router.delete("/delete/:id", async (c) => {
     }
 })
 
+router.post("/save/appleNote", async (c) => {
+    const prisma = getPrismaClient(c.env.DATABASE_URL)
+    try {
+        const body = await c.req.json()
+        const { title, link, category } = body
+        if (!link) {
+            return c.json({
+                error: "link is required"
+            }, 400)
+        }
+        const linkTitle = title && title.trim() !== "" ? title : link
+        const categoryName = category && category.trim() !== "" ? category : "no category"
+        // Check if category exists, otherwise create it
+        let targetCategory = await prisma.category.findFirst({
+            where: {
+                CategoryName: categoryName
+            }
+        })
+        if (!targetCategory) {
+            targetCategory = await prisma.category.create({
+                data: {
+                    CategoryName: categoryName
+                }
+            })
+        }
+        // Save the link associated with the category
+        const savedLink = await prisma.link.create({
+            data: {
+                url: link,
+                Name: linkTitle,
+                CategoryId: targetCategory.id
+            }
+        })
+        return c.json({
+            message: "link saved successfully from apple note shortcut",
+            save: savedLink
+        }, 201)
+    } catch (error) {
+        return c.json({
+            error: "error saving the link from apple note shortcut",
+        })
+    }
+})
 export default router;

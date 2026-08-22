@@ -25,7 +25,6 @@ model Link{
   id Int @id @default(autoincrement())
   url String
   Name String
-  Description String? //it means this filed is optional
   category Category @relation(fields: [CategoryId], references: [id])
   CategoryId Int
   createdAt DateTime @default(now())
