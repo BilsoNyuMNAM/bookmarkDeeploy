@@ -7,7 +7,7 @@ type WrapperProps = {
     setrefresh: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function Wrapper({ setOpen, setrefresh }: WrapperProps) {
+export default function Wrapper({ setOpen}: WrapperProps) {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
