@@ -27,8 +27,7 @@ function MainContent() {
                             {theme === "dark" ? "[☀ LIGHT]" : "[☾ DARK]"}
                         </button>
 
-                        {/* Add Bookmark CTA */}
-                        <Button refresh={refresh} setrefresh={setrefresh} />
+                        
                     </div>
                 </div>
             </header>
