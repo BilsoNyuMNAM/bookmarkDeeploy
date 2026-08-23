@@ -31,7 +31,7 @@ export function useBookmarkFilter(refresh: number = 0) {
                     setLoading(false);
                 });
             })
-            .catch((err) => {
+            .catch(() => {
                 setLoading(false);
             });
     }, [refresh]);

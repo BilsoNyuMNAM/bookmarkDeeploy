@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Bookmark from "./Bookmark";
+
 
 type WrapperProps = {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,9 +26,7 @@ export default function Wrapper({ setOpen, setrefresh }: WrapperProps) {
                 onClick={() => setOpen(false)}
             />
             {/* Modal Content */}
-            <div className="relative z-10 w-full max-w-lg">
-                <Bookmark setrefresh={setrefresh} setOpen={setOpen} />
-            </div>
+           
         </div>
     );
 }
