@@ -32,12 +32,10 @@ export function useBookmarkFilter(refresh: number = 0) {
                 });
             })
             .catch((err) => {
-                console.error("Failed to load bookmarks:", err);
                 setLoading(false);
             });
     }, [refresh]);
 
-    // Filtered bookmarks computed from real-time search query
     const filterBookmark = useMemo(() => {
         if (!searchQuery.trim()) {
             return bookMark;
@@ -54,7 +52,7 @@ export function useBookmarkFilter(refresh: number = 0) {
     }, [bookMark, searchQuery]);
 
     return {
-        bookMark,
+        bookMark, //contains all the bookmarks fetched from the API
         loading,
         searchQuery,
         setSearchQuery,

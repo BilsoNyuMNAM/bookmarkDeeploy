@@ -1,13 +1,14 @@
 import Display from "./Display";
 import Total from "./Total";
 import { useBookmarkFilter } from "../hooks/useBookmarkFilter";
-
+import CategoryFilter from "./CategoryFilter";
+import { useState } from "react";
 type GroupProps = {
     refresh: number;
     setrefresh: React.Dispatch<React.SetStateAction<number>>;
 };
-
 export default function Group({ refresh, setrefresh }: GroupProps) {
+    const [selectCategory, setSelectCategory] = useState<string | null>(null);
     const {
         bookMark,
         loading,
@@ -15,7 +16,11 @@ export default function Group({ refresh, setrefresh }: GroupProps) {
         setSearchQuery,
         filterBookmark,
     } = useBookmarkFilter(refresh);
-
+    const displayBookmarks = selectCategory
+        ? filterBookmark.filter(
+              (bookmark) => bookmark.category?.CategoryName === selectCategory
+          )
+        : filterBookmark;
     return (
         <div className="space-y-6">
             {/* Control Bar: Search & Status */}
@@ -38,10 +43,10 @@ export default function Group({ refresh, setrefresh }: GroupProps) {
                         </button>
                     )}
                 </div>
-
+                <CategoryFilter originalBookmarks={bookMark} setSelectCategory={setSelectCategory} />
                 {/* Total Stats */}
                 <Total
-                    filterBookmark={filterBookmark}
+                    filterBookmark={displayBookmarks}
                     totalCount={bookMark.length}
                 />
             </div>
@@ -54,7 +59,7 @@ export default function Group({ refresh, setrefresh }: GroupProps) {
                     </p>
                 </div>
             ) : (
-                <Display bookMark={filterBookmark} setrefresh={setrefresh} />
+                <Display bookMark={displayBookmarks} setrefresh={setrefresh} />
             )}
         </div>
     );
